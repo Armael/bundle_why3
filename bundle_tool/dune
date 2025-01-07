@@ -1,0 +1,4 @@
+(executable
+  (name tool)
+  (public_name bundle_tool)
+  (libraries bos))

@@ -1,0 +1,15 @@
+opam-version: "2.0"
+maintainer: "armael.gueneau@inria.fr"
+authors: [
+  "Armaël Guéneau"
+]
+
+depends: [
+  "ocaml"
+  "dune" {>= "2.0"}
+  "bos" {>= "0.2"}
+]
+
+build: [
+  ["dune" "build" "-p" name "-j" jobs "@install"]
+]
