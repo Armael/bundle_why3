@@ -184,7 +184,7 @@ mkdir -p ${DYNLIB_ABSDIR}
 mkdir -p ${BIN_ABSDIR}
 mkdir -p ${EXE_ABSDIR}
 mkdir -p ${SHARE_ABSDIR}
-mkdir logs
+mkdir -p logs
 
 ##### Copy the main why3 binary
 
