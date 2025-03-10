@@ -279,7 +279,7 @@ chmod a+x "$BIN_ABSDIR/relocate"
 
 # TODO: do we need this?
 
-ln -sf /Applications _dmg/Applications
+ln -sf /Applications "$OUTDIR/_dmg/Applications"
 
 ###################### CREATE INSTALLER ######################
 
@@ -288,7 +288,7 @@ ln -sf /Applications _dmg/Applications
 echo '##### Create DMG image #####'
 
 hdi_opts=(-volname "${DMG_NAME}"
-          -srcfolder _dmg
+          -srcfolder "$OUTDIR/_dmg"
           -ov # overwrite existing file
           ${ZIPCOMPR}
           # needed for backward compat since macOS 10.14 which uses APFS by default
@@ -296,6 +296,6 @@ hdi_opts=(-volname "${DMG_NAME}"
           -fs hfs+
          )
 
-retry_command 10 3 hdiutil create "${hdi_opts[@]}" "${DMG_NAME}.dmg"
+retry_command 10 3 hdiutil create "${hdi_opts[@]}" "$OUTDIR/${DMG_NAME}.dmg"
 
-echo "##### Finished installer '${DMG_NAME}.dmg' #####"
+echo "##### Finished installer '$OUTDIR/${DMG_NAME}.dmg' #####"
