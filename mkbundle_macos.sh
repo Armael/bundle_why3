@@ -7,7 +7,7 @@ OUTDIR="$2"
 DMG_NAME="why3-MacOS-$(uname -m)"
 
 # TODO: use _dmg/why3${version} instead
-APP_ABSDIR="_dmg/why3"
+APP_ABSDIR="$OUTDIR/_dmg/why3"
 RSRC_ABSDIR="$APP_ABSDIR/Contents/Resources"
 BIN_ABSDIR="$RSRC_ABSDIR/bin"
 LIB_ABSDIR="$RSRC_ABSDIR/lib"
@@ -144,7 +144,7 @@ function add_shared_library_dependencies {
   || [ "${type}" == 'Mach-O 64-bit dynamically linked shared library arm64' ]
   then
     echo "Adding shared libraries for $1"
-    REL_BUNDLE_ROOT_FROM_BIN="$(grealpath --relative-to="$(dirname "$1")" "$OUTDIR")"
+    REL_BUNDLE_ROOT_FROM_BIN="$(grealpath --relative-to="$(dirname "$1")" "$RSRC_ABSDIR")"
     "${MACPACK}" -v -d "$REL_BUNDLE_ROOT_FROM_BIN"/lib/dylib "$1" >> logs/macpack.log
   else
     echo "INFO: File '$1' with type '${type}' ignored in shared library analysis."
