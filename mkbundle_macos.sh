@@ -280,6 +280,9 @@ chmod a+x "$BIN_ABSDIR/relocate"
 
 cp Info.plist "$APP_ABSDIR/Contents/Info.plist"
 
+# TODO
+cp coqide.icns ${RSRC_ABSDIR}
+
 ###################### Create contents of the top level DMG folder  ######################
 
 ##### Link to the Applications folder #####

@@ -2,57 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>*</string>
-			</array>
-			<key>CFBundleTypeName</key>
-			<string>NSStringPboardType</string>
-			<key>CFBundleTypeOSTypes</key>
-			<array>
-				<string>****</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeIconFile</key>
-			<string>coqfile.icns</string>
-			<key>CFBundleTypeName</key>
-			<string>Why3 file</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleTypeMIMETypes</key>
-			<array>
-				<string>text/plain</string>
-			</array>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>coma</string>
-			</array>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>All</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleTypeMIMETypes</key>
-			<array>
-				<string>text/plain</string>
-			</array>
-			<key>LSHandlerRank</key>
-			<string>Default</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>*</string>
-			</array>
-		</dict>
-	</array>
 	<key>CFBundleIconFile</key>
 	<string>coqide.icns</string>
 	<key>CFBundleVersion</key>
@@ -67,10 +16,6 @@
 	<string>Why3_vVERSION</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright 1999-2019, Inria, CNRS and contributors</string>
-	<key>CFBundleHelpBookFolder</key>
-	<string>share/doc/coq/html/</string>
-	<key>CFAppleHelpAnchor</key>
-	<string>index</string>
 	<key>CFBundleExecutable</key>
 	<string>why3</string>
 	<key>CFBundlePackageType</key>
