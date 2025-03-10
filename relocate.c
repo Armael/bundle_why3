@@ -5,6 +5,7 @@
 #include <libgen.h>
 #include <sys/stat.h>
 #include <assert.h>
+#include <errno.h>
 
 #ifdef __APPLE__
 #include <libproc.h>
