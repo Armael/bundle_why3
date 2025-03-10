@@ -276,6 +276,10 @@ chmod a+x "$EXE_ABSDIR/why3"
 cc relocate.c -o "$BIN_ABSDIR/relocate"
 chmod a+x "$BIN_ABSDIR/relocate"
 
+#### Create Info.plist file ####
+
+cp Info.plist "$APP_ABSDIR/Contents/Info.plist"
+
 ###################### Create contents of the top level DMG folder  ######################
 
 ##### Link to the Applications folder #####
