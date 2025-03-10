@@ -15,6 +15,11 @@ SHARE_ABSDIR="$RSRC_ABSDIR/share"
 DYNLIB_ABSDIR="$RSRC_ABSDIR/lib/dylib"
 EXE_ABSDIR="$APP_ABSDIR/Contents/MacOS"
 
+# fast
+ZIPCOMPR='-format UDRO'
+# compact
+# ZIPCOMPR='-format UDBZ'
+
 ###### Script safety ######
 
 set -o nounset
