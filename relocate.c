@@ -125,11 +125,11 @@ int main (int argc, char* argv[]) {
 
   strncpy(tmp, resources_folder, sizeof(tmp)-1);
   strncat(tmp, "/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache", sizeof(tmp)-1);
-  patch_file(tmp, "PATCHMEPATCHME", bundle_folder, 0);
+  patch_file(tmp, "PATCHMEPATCHME", resources_folder, 0);
 
   strncpy(tmp, resources_folder, sizeof(tmp)-1);
   strncat(tmp, "/lib/gtk-3.0/3.0.0/immodules.cache", sizeof(tmp)-1);
-  patch_file(tmp, "PATCHMEPATCHME", bundle_folder, 0);
+  patch_file(tmp, "PATCHMEPATCHME", resources_folder, 0);
 
 #ifndef __APPLE__
   char interp_path[PATH_MAXSIZE];

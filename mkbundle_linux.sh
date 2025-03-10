@@ -91,7 +91,7 @@ done
 # the paths are absolute and need to be adjusted to their final path
 (cd "$PIXBUF_LOADER_ABSDIR/"; \
  GDK_PIXBUF_MODULEDIR=. gdk-pixbuf-query-loaders | \
-   sed "s|^\"\\./|\"$INSTALL_DIR_PLACEHOLDER/resources/lib/gdk-pixbuf-2.0/2.10.0/loaders/|" > ../loaders.cache)
+   sed "s|^\"\\./|\"$INSTALL_DIR_PLACEHOLDER/lib/gdk-pixbuf-2.0/2.10.0/loaders/|" > ../loaders.cache)
 
 IMMODULES_ABSDIR="$RSRC_ABSDIR/lib/gtk-3.0/3.0.0/immodules"
 mkdir -p "$IMMODULES_ABSDIR"
@@ -102,7 +102,7 @@ done
 # the paths are absolute and need to be adjusted to their final path
 (cd "$IMMODULES_ABSDIR/"; \
  gtk-query-immodules-3.0 | \
-   sed "s|^\".*/immodules/|\"$INSTALL_DIR_PLACEHOLDER/resources/lib/gtk-3.0/3.0.0/immodules/|" > ../immodules.cache)
+   sed "s|^\".*/immodules/|\"$INSTALL_DIR_PLACEHOLDER/lib/gtk-3.0/3.0.0/immodules/|" > ../immodules.cache)
 
 ##### Import dynamic dependencies for why3 and the GTK/GDK libraries
 
