@@ -7,7 +7,7 @@ OUTDIR="$2"
 DMG_NAME="why3-MacOS-$(uname -m)"
 
 # TODO: use _dmg/why3${version} instead
-APP_ABSDIR="$OUTDIR/_dmg/why3"
+APP_ABSDIR="$OUTDIR/_dmg/why3.app"
 RSRC_ABSDIR="$APP_ABSDIR/Contents/Resources"
 BIN_ABSDIR="$RSRC_ABSDIR/bin"
 LIB_ABSDIR="$RSRC_ABSDIR/lib"
