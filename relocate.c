@@ -88,10 +88,7 @@ void patch_file(char* filename, char* patch_str, char* newpath, int add_padding)
 
 int main (int argc, char* argv[]) {
   char bin_path[PATH_MAXSIZE];
-  char bundle_folder[PATH_MAXSIZE];
-  char exe_folder[PATH_MAXSIZE];
   char resources_folder[PATH_MAXSIZE];
-  char interp_path[PATH_MAXSIZE];
   char tmp[PATH_MAXSIZE];
 
 #ifdef __APPLE__
@@ -107,16 +104,24 @@ int main (int argc, char* argv[]) {
   bin_path[PATH_MAXSIZE] = '\0';
 #endif
 
-  // /.../bundle/exe/
-  strncpy(exe_folder, dirname(bin_path), sizeof(exe_folder)-1);
-  // /.../bundle/
-  strncpy(bundle_folder, dirname(exe_folder), sizeof(bundle_folder)-1);
-  // /.../bundle/resources
+#ifdef __APPLE__
+  // [bin_path] is of the form: /.../bundle/Contents/Resources/bin/relocate
+  char bin_folder[PATH_MAXSIZE];
+  char macos_folder[PATH_MAXSIZE];
+  char contents_folder[PATH_MAXSIZE];
+  strncpy(bin_folder, dirname(bin_path), sizeof(bin_folder)-1);
+  // [resources_folder]: /.../bundle/Contents/Resources
+  strncpy(resources_folder, dirname(bin_folder), sizeof(resources_folder)-1);
+#else
+  char bin_folder[PATH_MAXSIZE];
+  char bundle_folder[PATH_MAXSIZE];
+  // [bin_path] is of the form: /.../bundle/bin/relocate
+  strncpy(bin_folder, dirname(bin_path), sizeof(bin_folder)-1);
+  strncpy(bundle_folder, dirname(bin_folder), sizeof(bundle_folder)-1);
+  // [resources_folder]: /.../bundle/resources
   strncpy(resources_folder, bundle_folder, sizeof(resources_folder)-1);
   strncat(resources_folder, "/resources", sizeof(resources_folder)-1);
-  // /.../bundle/interp/ld.so
-  strncpy(interp_path, bundle_folder, sizeof(interp_path)-1);
-  strncat(interp_path, "/interp/ld.so", sizeof(interp_path)-1);
+#endif
 
   strncpy(tmp, resources_folder, sizeof(tmp)-1);
   strncat(tmp, "/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache", sizeof(tmp)-1);
@@ -127,8 +132,13 @@ int main (int argc, char* argv[]) {
   patch_file(tmp, "PATCHMEPATCHME", bundle_folder, 0);
 
 #ifndef __APPLE__
+  char interp_path[PATH_MAXSIZE];
+  // /.../bundle/interp/ld.so
+  strncpy(interp_path, bundle_folder, sizeof(interp_path)-1);
+  strncat(interp_path, "/interp/ld.so", sizeof(interp_path)-1);
+
   strncpy(tmp, bundle_folder, sizeof(tmp)-1);
-  strncat(tmp, "/exe/why3", sizeof(tmp)-1);
+  strncat(tmp, "/bin/why3", sizeof(tmp)-1);
   char* patch = interp_patch_pattern();
   patch_file(tmp, patch, interp_path, 1);
   free(patch);

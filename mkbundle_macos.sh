@@ -3,17 +3,54 @@
 SWITCHDIR="$1"
 OUTDIR="$2"
 
-BIN_ABSDIR="$OUTDIR/bin"
-EXE_ABSDIR="$OUTDIR/exe"
-LIB_ABSDIR="$OUTDIR/lib"
-DYNLIB_ABSDIR="$OUTDIR/lib/dylib"
-SHARE_ABSDIR="$OUTDIR/share"
-RSRC_ABSDIR="$OUTDIR/resources"
+# TODO: include why3's version
+DMG_NAME="why3-MacOS-$(uname -m)"
+
+# TODO: use _dmg/why3${version} instead
+APP_ABSDIR="_dmg/why3"
+RSRC_ABSDIR="$APP_ABSDIR/Contents/Resources"
+BIN_ABSDIR="$RSRC_ABSDIR/bin"
+LIB_ABSDIR="$RSRC_ABSDIR/lib"
+SHARE_ABSDIR="$RSRC_ABSDIR/share"
+DYNLIB_ABSDIR="$RSRC_ABSDIR/lib/dylib"
+EXE_ABSDIR="$APP_ABSDIR/Contents/MacOS"
 
 ###### Script safety ######
 
 set -o nounset
 set -o errexit
+
+##### retry a command (macOS hdiutil is unreliable since a while) #####
+
+# $1 = retry count
+# $2 = wait time [s]
+# $3.. = command and args
+
+function retry_command()
+{
+    local maxtries=$1
+    local sleeptime=$2
+    local cmd="${@: 3}"
+    local ntries=0
+    echo "retry $maxtries with delay of $sleeptime command '$cmd'"
+    while true
+    do
+        if [ $ntries -ge $maxtries ]
+        then
+            echo "Max retry count reached -> abort"
+            return 1
+        fi
+
+        if $cmd
+        then
+            return 0
+        else
+            ((ntries++))
+            echo "Command failed: $cmd - try $ntries/$maxtries"
+            sleep $sleeptime
+        fi
+    done
+}
 
 ###### Check if required system utilities are installed #####
 
@@ -141,18 +178,16 @@ function add_single_file {
 
 ##### Create the bundle folder structure #####
 
-mkdir "$OUTDIR"
-mkdir -p "$BIN_ABSDIR"
-mkdir -p "$EXE_ABSDIR"
-mkdir -p "$LIB_ABSDIR"
-mkdir -p "$DYNLIB_ABSDIR"
-mkdir -p "$SHARE_ABSDIR"
-mkdir -p "$RSRC_ABSDIR"
-mkdir -p logs
+mkdir -p ${APP_ABSDIR}
+mkdir -p ${RSRC_ABSDIR}
+mkdir -p ${DYNLIB_ABSDIR}
+mkdir -p ${BIN_ABSDIR}
+mkdir -p ${EXE_ABSDIR}
+mkdir -p ${SHARE_ABSDIR}
 
 ##### Copy the main why3 binary
 
-cp "$SWITCHDIR/bin/why3" "$EXE_ABSDIR/"
+cp "$SWITCHDIR/bin/why3" "$BIN_ABSDIR/"
 cp -r "$SWITCHDIR/lib/why3" "$LIB_ABSDIR/"
 cp -r "$SWITCHDIR/share/why3" "$SHARE_ABSDIR/"
 
@@ -184,7 +219,7 @@ done
 
 ##### Import dynamic dependencies for why3 and the GTK/GDK libraries
 
-add_shared_library_dependencies "$EXE_ABSDIR/why3"
+add_shared_library_dependencies "$BIN_ABSDIR/why3"
 
 add_shared_library_dependencies_dir "$LIB_ABSDIR/why3"
 
@@ -226,10 +261,40 @@ add_files_of_system_package gtksourceview3 "/share/gtksourceview-3.0/"
 
 ##### Create wrapper executable to start why3 with the correct environment
 
-cc wrapper.c -o "$BIN_ABSDIR/why3"
-chmod a+x "$BIN_ABSDIR/why3"
+cc wrapper.c -o "$EXE_ABSDIR/why3"
+chmod a+x "$EXE_ABSDIR/why3"
 
 ##### Create relocation binary to run after unpacking the bundle
 
-cc relocate.c -o "$EXE_ABSDIR/relocate"
-chmod a+x "$EXE_ABSDIR/relocate"
+# TODO should this be a separate binary and where
+cc relocate.c -o "$BIN_ABSDIR/relocate"
+chmod a+x "$BIN_ABSDIR/relocate"
+
+###################### Create contents of the top level DMG folder  ######################
+
+##### Link to the Applications folder #####
+
+# Create a link to the 'Applications' folder, so that one can drag and drop the application there
+
+# TODO: do we need this?
+
+ln -sf /Applications _dmg/Applications
+
+###################### CREATE INSTALLER ######################
+
+##### Create DMG image from folder #####
+
+echo '##### Create DMG image #####'
+
+hdi_opts=(-volname "${DMG_NAME}"
+          -srcfolder _dmg
+          -ov # overwrite existing file
+          ${ZIPCOMPR}
+          # needed for backward compat since macOS 10.14 which uses APFS by default
+          # see discussion in #11803
+          -fs hfs+
+         )
+
+retry_command 10 3 hdiutil create "${hdi_opts[@]}" "${DMG_NAME}.dmg"
+
+echo "##### Finished installer '${DMG_NAME}.dmg' #####"

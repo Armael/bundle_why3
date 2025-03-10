@@ -18,9 +18,6 @@
 
 int main (int argc, char* argv[]) {
   char bin_path[PATH_MAXSIZE];
-  char bin_folder[PATH_MAXSIZE];
-  char bundle_folder[PATH_MAXSIZE];
-  char exe_folder[PATH_MAXSIZE];
   char resources_folder[PATH_MAXSIZE];
   char why3_path[PATH_MAXSIZE];
   char tmp[PATH_MAXSIZE];
@@ -38,20 +35,35 @@ int main (int argc, char* argv[]) {
   bin_path[PATH_MAXSIZE] = '\0';
 #endif
 
-  // .../bundle/bin/
-  strncpy(bin_folder, dirname(bin_path), sizeof(bin_folder)-1);
-  // .../bundle/
-  strncpy(bundle_folder, dirname(bin_folder), sizeof(bundle_folder)-1);
-  // .../bundle/exe
-  strncpy(exe_folder, bundle_folder, sizeof(exe_folder)-1);
-  strncat(exe_folder, "/exe", sizeof(exe_folder)-1);
-  // .../bundle/resources
+#ifdef __APPLE__
+  // [bin_path] is of the form: /.../bundle/Contents/MacOS/why3
+  char macos_folder[PATH_MAXSIZE];
+  char contents_folder[PATH_MAXSIZE];
+  strncpy(macos_folder, dirname(bin_path), sizeof(macos_folder)-1);
+  strncpy(contents_folder, dirname(macos_folder), sizeof(contents_folder)-1);
+
+  // [resources_folder]: /.../bundle/Contents/Resources
+  strncpy(resources_folder, contents_folder, sizeof(resources_folder)-1);
+  strncat(resources_folder, "/Resources", sizeof(resources_folder)-1);
+
+  // [why3_path]: /.../bundle/Contents/Resources/bin/why3
+  strncpy(why3_path, resources_folder, sizeof(why3_path)-1);
+  strncat(why3_path, "/bin/why3", sizeof(why3_path)-1);
+#else
+  // [bin_path] is of the form: /.../bundle/exe/why3
+  char exe_folder[PATH_MAXSIZE];
+  char bundle_folder[PATH_MAXSIZE];
+  strncpy(exe_folder, dirname(bin_path), sizeof(exe_folder)-1);
+  strncpy(bundle_folder, dirname(exe_folder), sizeof(bundle_folder)-1);
+
+  // [resources_folder]: /.../bundle/resources
   strncpy(resources_folder, bundle_folder, sizeof(resources_folder)-1);
   strncat(resources_folder, "/resources", sizeof(resources_folder)-1);
 
-  // .../bundle/exe/why3
-  strncpy(why3_path, exe_folder, sizeof(why3_path)-1);
-  strncat(why3_path, "/why3", sizeof(why3_path)-1);
+  // [why3_path]: /.../bundle/bin/why3
+  strncpy(why3_path, bundle_folder, sizeof(why3_path)-1);
+  strncat(why3_path, "/bin/why3", sizeof(why3_path)-1);
+#endif
 
   // Generate and set GDK_PIXBUF_MODULE_FILE
   strncpy(tmp, resources_folder, sizeof(tmp)-1);

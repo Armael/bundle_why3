@@ -76,7 +76,7 @@ mkdir -p "$RSRC_ABSDIR"
 
 ##### Copy the main why3 binary
 
-cp "$SWITCHDIR/bin/why3" "$EXE_ABSDIR/"
+cp "$SWITCHDIR/bin/why3" "$BIN_ABSDIR/"
 cp -r "$SWITCHDIR/lib/why3" "$LIB_ABSDIR/"
 cp -r "$SWITCHDIR/share/why3" "$SHARE_ABSDIR/"
 
@@ -106,8 +106,8 @@ done
 
 ##### Import dynamic dependencies for why3 and the GTK/GDK libraries
 
-add_shared_library_dependencies "$EXE_ABSDIR/why3"
-patchelf --set-interpreter "$(interp_patch_pattern)" "$EXE_ABSDIR/why3"
+add_shared_library_dependencies "$BIN_ABSDIR/why3"
+patchelf --set-interpreter "$(interp_patch_pattern)" "$BIN_ABSDIR/why3"
 
 add_shared_library_dependencies "$LIB_ABSDIR/why3"
 
@@ -155,10 +155,10 @@ cp fonts.conf "$RSRC_ABSDIR/etc/fonts/"
 
 ##### Create wrapper executable to start why3 with the correct ld.so and environment
 
-cc -static wrapper.c -o "$BIN_ABSDIR/why3"
-chmod a+x "$BIN_ABSDIR/why3"
+cc -static wrapper.c -o "$EXE_ABSDIR/why3"
+chmod a+x "$EXE_ABSDIR/why3"
 
 ##### Create relocation binary to run after unpacking the bundle
 
-cc -static relocate.c -o "$EXE_ABSDIR/relocate"
-chmod a+x "$EXE_ABSDIR/relocate"
+cc -static relocate.c -o "$BIN_ABSDIR/relocate"
+chmod a+x "$BIN_ABSDIR/relocate"
